@@ -1,0 +1,10 @@
+﻿  Game.cpp
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJackGame\Game.cpp(174,2): warning C4150: deletion of pointer to incomplete type 'SDL_Window'; no destructor called
+  C:\Users\fatos\OneDrive\Работен плот\SDL2-2.30.0\include\SDL_video.h(95,16):
+  see declaration of 'SDL_Window'
+  
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJackGame\Game.cpp(175,2): warning C4150: deletion of pointer to incomplete type 'SDL_Renderer'; no destructor called
+  C:\Users\fatos\OneDrive\Работен плот\SDL2-2.30.0\include\SDL_render.h(141,8):
+  see declaration of 'SDL_Renderer'
+  
+  BlackJackGame.vcxproj -> C:\Users\fatos\OneDrive\Работен плот\c++\BlackJackGame\x64\Debug\BlackJackGame.exe
