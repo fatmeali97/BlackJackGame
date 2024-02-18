@@ -22,13 +22,20 @@ public:
 	void clean();
 	bool isRunning();
 	
-	std::string getRandomFace(); // ?? ?? ????? ???????? ?????
+	std::string getRandomFace(); 
+	
+	static double calculatePlayerPoints();
+	static double calculateDealerPoints();
 
 private:
-	void loadTextures(); // ????????? ?? ??????????;
+	void loadTextures();
 
 	void initPlayerCards();
 	void initDealerCards();
+	void initCardsValue();
+
+
+	// void setNewPoints(double playerPoints = 0.0, double dealerPoints = 0.0);
 
 	SDL_Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
@@ -56,4 +63,6 @@ private:
 	Card dealerCard1;
 	Card dealerCard2;
 
+	static double playerPoints;
+	static double dealerPoints;
 };

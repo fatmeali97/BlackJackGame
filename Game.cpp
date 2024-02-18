@@ -441,6 +441,19 @@ std::string Game::getRandomFace()
 	std::string firstCardValue = allCards[firstCardIndex];
 	std::cout << firstCardIndex << std::endl;
 	return firstCardValue;
+
+
+
+}
+
+double Game::calculatePlayerPoints()
+{
+	return 0.0;
+}
+
+double Game::calculateDealerPoints()
+{
+	return 0.0;
 }
 
 
@@ -455,6 +468,12 @@ void Game::initDealerCards()
 	std::string card2Value = getRandomFace();
 	dealerCard2.SetFace(card2Value);
 }
+
+void Game::initCardsValue()
+{
+}
+
+
 
 
 
