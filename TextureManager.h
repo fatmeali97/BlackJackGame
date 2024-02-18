@@ -10,21 +10,11 @@ public:
 		std::string id,
 		SDL_Renderer* ren);
 
-	bool loadCards(const char* fileName,
-		std::string id,
-		SDL_Renderer* ren);
-
 	void drawTexture(std::string id,
 		SDL_Rect destRect,
 		SDL_Renderer* ren,
+		double angle = 0,
 		SDL_RendererFlip flip = SDL_FLIP_NONE);
-
-	void drawCards(std::string id,
-		SDL_Rect destRect,
-		SDL_Renderer* ren,
-		double angle,
-		SDL_RendererFlip flip = SDL_FLIP_NONE);
-
 
 	static TextureManager* Instance()
 	{
@@ -39,9 +29,6 @@ public:
 private:
 	TextureManager() {}
 	std::map<std::string, SDL_Texture*> textureMap;
-	std::map<std::string, SDL_Texture*> CardsMap;
 	static TextureManager* instance;
-
-
 };
 

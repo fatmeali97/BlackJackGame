@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
-
+#include "Card.h"
 
 class Game
 {
@@ -21,8 +21,15 @@ public:
 	void handleEvents();
 	void clean();
 	bool isRunning();
+	
+	std::string getRandomFace(); // ?? ?? ????? ???????? ?????
 
 private:
+	void loadTextures(); // ????????? ?? ??????????;
+
+	void initPlayerCards();
+	void initDealerCards();
+
 	SDL_Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
 	bool running;
@@ -33,8 +40,20 @@ private:
 	int cardPosX = 0;
 	int cardPosY = 0;
 
-	//first state of game - cards back; 
-	bool isBackOfCard = true;
+	enum GameState
+	{
+		ReadyToStartGame,
+		PlayerHaveTwoCards,
+		PlayerHaveThreeCards,
+		GameResult
+	};
+	GameState state;
 
+	Card playerCard1;
+	Card playerCard2;
+	Card playerCard3;
+
+	Card dealerCard1;
+	Card dealerCard2;
 
 };
