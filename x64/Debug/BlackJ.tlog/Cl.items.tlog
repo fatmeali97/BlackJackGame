@@ -1,5 +1,10 @@
 C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Balance.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\Balance.obj
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\BlackJ.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\BlackJ.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\main.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\main.obj
 C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Card.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\Card.obj
 C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\Game.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Interface.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\Interface.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\LayoutHorizontalView.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\LayoutHorizontalView.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\LayoutVerticalView.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\LayoutVerticalView.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Player.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\Player.obj
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\GameStates.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\GameStates.obj
 C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\TextureManager.cpp;C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\x64\Debug\TextureManager.obj

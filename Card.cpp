@@ -6,14 +6,24 @@ void Card::SetFace(std::string face)
 	this->face = face;
 }
 
-void Card::DrawFace(SDL_Renderer* ren)
+std::string Card::GetFace()
 {
-	TextureManager::Instance()->drawTexture(face, { xPos, yPos, 120, 190 }, ren);
+	return face;
 }
 
-void Card::DrawBack(SDL_Renderer* ren)
+void Card::DrawFace(SDL_Renderer* ren, int angle)
 {
-	TextureManager::Instance()->drawTexture("cardBack", { xPos, yPos, 120, 190 }, ren);
+	TextureManager::Instance()->drawTexture(face, { xPos, yPos, 120, 190 }, ren, angle);
+}
+
+void Card::DrawFaceVertical(SDL_Renderer* ren)
+{
+	TextureManager::Instance()->drawTexture(face, { xPos, yPos, 120, 190 }, ren, 90);
+}
+
+void Card::DrawBack(SDL_Renderer* ren, int angle)
+{
+	TextureManager::Instance()->drawTexture("cardBack", { xPos, yPos, 120, 190 }, ren, angle);
 }
 
 void Card::SetPosition(int x, int y)

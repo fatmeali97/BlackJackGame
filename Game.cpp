@@ -1,8 +1,11 @@
 ﻿//Game.cpp
 #include "Game.h"
 #include "TextureManager.h"
+#include "LayoutHorizontalView.h"
+#include "LayoutVerticalView.h"
 #include <iostream>
 #include <vector>
+
 
 bool Game::init(const char* title, int xpos, int ypos, int width, int height, int flags)
 {
@@ -23,10 +26,14 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				time_t t;
 				srand((unsigned)time(&t)); // разбъркваме картите от самото начало
 
+				state = ReadyToStartGame;
 				loadTextures();
 				initPlayerCards();
 				initDealerCards();
+				player.InitText(renderer);
 
+			
+				layout = std::make_unique<LayoutHorizontalView>();
 			}
 			else
 			{
@@ -50,53 +57,45 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 	return true;
 }
 
-
-
 void Game::render()
 {
 	SDL_RenderClear(renderer);
+	layout->DrawBackground(renderer);
 
-	int ww, wh;
-	SDL_GetWindowSize(window, &ww, &wh);
 
-	//Background Image upload
-	TextureManager::Instance()->drawTexture("background", { 0, 0, backgroundWidht, backgroundHeight }, renderer);
-
-	if (state == ReadyToStartGame)
+	if (state == PlayersHaveTwoCards || state == Playing)
 	{
-		//nothing to draw;
-	}
-	else if (state == PlayerHaveTwoCards)
-	{
-		//Dealer Cards
-		dealerCard1.DrawBack(renderer);
-		dealerCard2.DrawBack(renderer);
-		//Open cards
-		playerCard1.DrawFace(renderer);
-		playerCard2.DrawFace(renderer);
-	}
-	else if (state == PlayerHaveThreeCards)
-	{
-		//Dealer Cards
-		dealerCard1.DrawBack(renderer);
-		dealerCard2.DrawBack(renderer);
+		player.RenderButton(renderer);
 
-		//Open cards
-		playerCard1.DrawFace(renderer);
-		playerCard2.DrawFace(renderer);
-		playerCard3.DrawFace(renderer);
+		for (int i = 0; i < dealerCards.size(); ++i)
+		{
+			layout->DrawDirectionDealer(renderer, dealerCards);
+		}
+
+		for (int i = 0; i < playerCards.size(); ++i)
+		{
+			layout->DrawDirectionPlayer(renderer, playerCards);
+		}
 	}
+
 	else if (state == GameResult)
 	{
-		//Dealer Cards
-		dealerCard1.DrawFace(renderer);
-		dealerCard2.DrawFace(renderer);
-
-		//Open cards
-		playerCard1.DrawFace(renderer);
-		playerCard2.DrawFace(renderer);
-		playerCard3.DrawFace(renderer);
+		if (isLosingGame)
+		{
+			TextureManager::Instance()->drawTexture("YouLose", { 0,0,600,300 }, renderer, 0);
+		}
+		else 
+		{
+			TextureManager::Instance()->drawTexture("YouWin", { 0,0,600,300 }, renderer, 0);
+		}
 	}
+	
+	if (state == ReadyToStartGame)
+	{
+		TextureManager::Instance()->drawTexture("Start", { 0,0,600,300 }, renderer, 0);
+	}
+	
+	player.UpdateScore(renderer);
 	SDL_RenderPresent(renderer);
 }
 
@@ -111,30 +110,56 @@ void Game::handleEvents()
 
 		case SDL_KEYDOWN:
 		{
-			if (event.key.keysym.sym == SDLK_1)
+			if (event.key.keysym.sym == SDLK_SPACE)
 			{
-				state = ReadyToStartGame;
+				std::cout << "the state is: " << state << std::endl;
+				if (state == ReadyToStartGame)
+				{
+					state = PlayersHaveTwoCards;
+
+				}
+				else if (state == GameResult)
+				{
+					ResetGame();
+					state = ReadyToStartGame;
+				}
 			}
-			else if (event.key.keysym.sym == SDLK_2)
+
+			if (event.key.keysym.sym == SDLK_7)
 			{
-				state = PlayerHaveTwoCards;
+				ChangeLayout();
 			}
-			else if (event.key.keysym.sym == SDLK_3)
+		}break;
+
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			if (SDL_BUTTON_LEFT == event.button.button)
 			{
-				state = PlayerHaveThreeCards;
+				int x = 0;
+				int y = 0;
+				SDL_GetMouseState(&x, &y);
+
+				if (player.IsBtnClickable(player.m_hitBtn.m_hitDestRect, x, y) 
+					&& state == PlayersHaveTwoCards || state == Playing)
+				{
+					state = Playing;
+					std::cout << "you clicked HIT btn" << std::endl;
+					GivePlayerCard(1, playerCards);
+					Compare();
+				}
+				      
+				if (player.IsBtnClickable(player.m_stayBtn.m_stayDestRect, x, y) 
+					&& state == PlayersHaveTwoCards || state == Playing)
+				{
+					state = Playing;
+					std::cout << "you clicked STAY btn" << std::endl;
+					GiveDealerCard(1, dealerCards);
+					Compare();
+				}
 			}
-			else if (event.key.keysym.sym == SDLK_4)
-			{
-				state = GameResult;
-			}
-			else if (event.key.keysym.sym == SDLK_5)
-			{
-				playerCard1.SetFace("DiamondsQ");
-			}
-		}
+		}break;
 
 		default: break;
-
 		}
 	}
 }
@@ -155,12 +180,14 @@ bool Game::isRunning()
 	return Game::running;
 }
 
-
-
 void Game::loadTextures()
 {
 	TextureManager::Instance()->loadTexture("./assets/10013144.jpg",
 		"background",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/linen-texture-green-tones.jpg",
+		"background1",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardBackBlue.png",
@@ -201,7 +228,7 @@ void Game::loadTextures()
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardClubs10.png",
-		"Clubs10",
+		"Clubs0",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardClubsA.png",
@@ -254,11 +281,11 @@ void Game::loadTextures()
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardDiamonds10.png",
-		"Diamonds10",
+		"Diamonds0",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardDiamondsA.png",
-		"ClubsA",
+		"DiamondsA",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardDiamondsJ.png",
@@ -307,7 +334,7 @@ void Game::loadTextures()
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardHearts10.png",
-		"Hearts10",
+		"Hearts0",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardHeartsA.png",
@@ -360,7 +387,7 @@ void Game::loadTextures()
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardSpades10.png",
-		"Spades10",
+		"Spades0",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardSpadesA.png",
@@ -379,23 +406,225 @@ void Game::loadTextures()
 		"SpadesQ",
 		renderer);
 
+	//states
+	TextureManager::Instance()->loadTexture("./assets/states/3.png",
+		"Start",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/states/2.png",
+		"Play",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/states/1.png",
+		"GameOver",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/states/4.png",
+		"YouWin",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/states/5.png",
+		"YouLose",
+		renderer);
+
 }
 
 void Game::initPlayerCards()
 {
+	for (int i = 0; i < 2; ++i)
+	{
+		Card tempCard;
+		tempCard.SetPosition(cardPosX + (i * constant::cardOffset), cardPosY + constant::playerDealerYpos);
+		std::string cardValue = getRandomFace();
+		tempCard.SetFace(cardValue);
+		playerCards.push_back(tempCard);
+		std::cout << "Player cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;
+		player.SetPlayerScore(m_power);
+	}
+}
 
-	playerCard1.SetPosition(cardPosX + 350, cardPosY + 450);
-	playerCard2.SetPosition(cardPosX + 550, cardPosY + 450);
-	playerCard3.SetPosition(cardPosX + 750, cardPosY + 450);
+void Game::initDealerCards()
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		Card tempCard;
+		tempCard.SetPosition(cardPosX + (i * constant::cardOffset), cardPosY + constant::dealerDealerYpos);
+		std::string cardValue = getRandomFace();
+		tempCard.SetFace(cardValue);
+		dealerCards.push_back(tempCard);
+		std::cout << "Dealer cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;
+		player.SetDealerScore(m_power);
+	}
+}
 
-	std::string card1Value = getRandomFace();
-	playerCard1.SetFace(card1Value);
+void Game::ChangeLayout()
+{
+	m_layoutId++;
 
-	std::string card2Value = getRandomFace();
-	playerCard2.SetFace(card2Value);
+	if (m_layoutId > 1)
+	{
+		m_layoutId = 0;
+	}
 
-	std::string card3Value = getRandomFace();
-	playerCard3.SetFace(card3Value);
+	switch (m_layoutId)
+	{
+	case 0: 
+	{
+		layout = std::make_unique<LayoutHorizontalView>();
+	} break;
+	case 1: 
+	{
+		layout = std::make_unique<LayoutVerticalView>();
+	} break;
+	default: break;
+	}
+}
+
+void Game::ResetGame()
+{
+	IsStartingNewGame = true;
+	player.ResetData();
+	dealerCards.clear();
+	playerCards.clear();
+	initDealerCards();
+	initPlayerCards();
+}
+
+void Game::GameOver()
+{
+	state = GameResult;
+	IsGameOver = true;
+	IsStartingNewGame = false;
+	isLosingGame = false;
+	isWiningGame = false;
+}
+
+void Game::Win()
+{
+	state = GameResult;
+	isWiningGame = true;
+	IsStartingNewGame = false;
+	IsGameOver = false;
+	isLosingGame = false;
+}
+
+void Game::Lose()
+{
+	state = GameResult;
+	isLosingGame = true;
+	IsStartingNewGame = false;
+	IsGameOver = false;
+	isWiningGame = false;
+}
+
+void Game::Compare()
+{
+	balance.SetBetValue(1000);
+	//Only compare;
+	std::cout << " Balance: " << balance.GetBalance() << std::endl;
+	//if (player.GetPlayerScore() >= 21 || player.GetDealerScore() >= 21)
+	//{
+	//	if (player.GetPlayerScore() < 21 && player.GetPlayerScore() < player.GetDealerScore())
+	//	{
+	//		double newBalance = balance.GetBalance() + (2 * balance.GetBetValue());
+	//		balance.SetBalance(newBalance);
+	//		Win();
+	//	}
+	//	else if (player.GetPlayerScore() == 21 )
+	//	{
+	//		double newBalance = balance.GetBalance() + (1.5 * balance.GetBetValue()) + balance.GetBetValue();
+	//		balance.SetBalance(newBalance);
+	//		Win();
+	//	}
+	//	//check the logic
+	//	else if (player.GetPlayerScore() > 21 && player.GetPlayerScore() > player.GetDealerScore())
+	//	{
+	//		if (player.GetPlayerScore() > player.GetDealerScore())
+	//		{
+	//			double newBalance = balance.GetBalance() - balance.GetBetValue();
+	//			balance.SetBalance(newBalance);
+	//			Lose();
+	//		}
+	//		if (player.GetPlayerScore() < player.GetDealerScore())
+	//		{
+	//			double newBalance = balance.GetBalance() - balance.GetBetValue();
+	//			balance.SetBalance(newBalance);
+	//			Lose();
+	//		}
+	//	}
+	//}
+
+	/*if (player.GetPlayerScore() >= 21 || player.GetDealerScore() >= 21)
+	{
+		return;
+	}*/
+
+	if (player.GetPlayerScore() >= 21 && player.GetPlayerScore() > player.GetDealerScore())
+	{
+		double newBalance = balance.GetBalance() - balance.GetBetValue();
+		balance.SetBalance(newBalance);
+		Lose();
+		//return;
+	}
+
+	else if (player.GetPlayerScore() < 21 && player.GetDealerScore() > 21)
+	{
+		double newBalance = balance.GetBalance() - balance.GetBetValue();
+		balance.SetBalance(newBalance);
+		Win();
+		//return;
+	}
+
+	else if (player.GetPlayerScore() == 21 && player.GetPlayerScore() == player.GetDealerScore())
+	{
+		if (player.GetPlayerScore() < player.GetDealerScore())
+		{
+			double newBalance = balance.GetBalance() - balance.GetBetValue();
+			balance.SetBalance(newBalance);
+			Win();
+			//return;
+		}
+		else if (player.GetPlayerScore() > player.GetDealerScore())
+		{
+			double newBalance = balance.GetBalance() - balance.GetBetValue();
+			balance.SetBalance(newBalance);
+			Lose();
+			//return;
+		}
+	}
+
+	std::cout << balance.GetBalance() << std::endl;
+}
+
+
+void Game::GiveDealerCard(int cardToBeGiven, std::vector <Card>& cards)
+{
+	for (int i = 0; i < cardToBeGiven; ++i)
+	{
+		Card tempCard;
+		std::string cardValue = getRandomFace();
+		tempCard.SetFace(cardValue);
+		cards.push_back(tempCard);
+		std::cout << "Player cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;
+		player.SetDealerScore(m_power);
+	}
+}
+
+void Game::GivePlayerCard(int cardToBeGiven, std::vector <Card> &cards)
+{
+	for (int i = 0; i < cardToBeGiven; ++i)
+	{
+		Card tempCard;
+		std::string cardValue = getRandomFace();
+		tempCard.SetFace(cardValue);
+		cards.push_back(tempCard);
+		std::cout << "Dealer cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;
+		player.SetPlayerScore(m_power);
+	}
 }
 
 std::string Game::getRandomFace()
@@ -406,7 +635,7 @@ std::string Game::getRandomFace()
 		"Clubs4","Clubs5",
 		"Clubs6","Clubs7",
 		"Clubs8","Clubs9",
-		"Clubs10","ClubsA",
+		"Clubs0","ClubsA",
 		"ClubsJ","ClubsK",
 		"ClubsQ",
 
@@ -414,7 +643,7 @@ std::string Game::getRandomFace()
 		"Diamonds4","Diamonds5",
 		"Diamonds6","Diamonds7",
 		"Diamonds8","Diamonds9",
-		"Diamonds10","DiamondsA",
+		"Diamonds0","DiamondsA",
 		"DiamondsJ","DiamondsK",
 		"DiamondsQ",
 
@@ -422,7 +651,7 @@ std::string Game::getRandomFace()
 		"Hearts4","Hearts5",
 		"Hearts6","Hearts7",
 		"Hearts8","Hearts9",
-		"Hearts10","HeartsA",
+		"Hearts0","HeartsA",
 		"HeartsJ","HeartsK",
 		"HeartsQ",
 
@@ -430,52 +659,53 @@ std::string Game::getRandomFace()
 		"Spades4","Spades5",
 		"Spades6","Spades7",
 		"Spades8","Spades9",
-		"Spades10","SpadesA",
+		"Spades0","SpadesA",
 		"SpadesJ","SpadesK",
 		"SpadesQ"
 	};
 
-
-	int cardsCount = allCards.size();
-	int firstCardIndex = rand() % cardsCount;
+	int cardsCount = allCards.size(); // how much cards we have
+	int firstCardIndex = rand() % cardsCount; // the card index that is randed
 	std::string firstCardValue = allCards[firstCardIndex];
-	std::cout << firstCardIndex << std::endl;
+
+	for (int i = 0; i < 1; ++i)
+	{
+		int lastNum = firstCardValue.back() - '0';
+		
+		//set the power
+		if (lastNum > 0 && lastNum <= 9)
+		{
+			int power = lastNum;
+			m_power = power;
+		}
+		if (lastNum == 0)
+		{
+			int power = 10;
+			m_power = power;
+		}
+		if (firstCardValue.back() == 'A')
+		{
+			int power = 11;
+			m_power = power;
+		}
+		if (firstCardValue.back() == 'J')
+		{
+			int power = 12;
+			m_power = power;
+		}
+		if (firstCardValue.back() == 'Q')
+		{
+			int power = 13;
+			m_power = power;
+		}
+		if (firstCardValue.back() == 'K')
+		{
+			int power = 14;
+			m_power = power;
+		}
+	}
 	return firstCardValue;
-
-
-
 }
-
-double Game::calculatePlayerPoints()
-{
-	return 0.0;
-}
-
-double Game::calculateDealerPoints()
-{
-	return 0.0;
-}
-
-
-void Game::initDealerCards()
-{
-	dealerCard1.SetPosition(cardPosX +350, cardPosY + 50 );
-	dealerCard2.SetPosition(cardPosX + 750, cardPosY + 50);
-
-	std::string card1Value = getRandomFace();
-	dealerCard1.SetFace(card1Value);
-
-	std::string card2Value = getRandomFace();
-	dealerCard2.SetFace(card2Value);
-}
-
-void Game::initCardsValue()
-{
-}
-
-
-
-
 
 Game::Game()
 {

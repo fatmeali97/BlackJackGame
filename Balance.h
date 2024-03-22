@@ -2,18 +2,13 @@
 class Balance
 {
 public:
-
-	Balance(double balance);
-
+	Balance();
+	Balance (double balance);
 	void SetBalance(double balance);
 	double GetBalance() const;
-	double Compare();
 
-	double Hit();
-	double Stay();
-
-	void Win(); 
-	void Loose(); 
+	void SetBetValue(double bet);
+	double GetBetValue();
 
 private:
 	double m_balance = 100000.00;

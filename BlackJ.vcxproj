@@ -133,15 +133,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Balance.cpp" />
-    <ClCompile Include="BlackJ.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="LayoutHorizontalView.cpp" />
+    <ClCompile Include="LayoutVerticalView.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="GameStates.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Balance.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Interface.h" />
+    <ClInclude Include="LayoutHorizontalView.h" />
+    <ClInclude Include="LayoutVerticalView.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="GameStates.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,9 +1,13 @@
 #pragma once
 #include <SDL.h>
+#include <vector>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <memory>
 #include "Card.h"
+#include "Player.h"
+#include "Interface.h"
 
 class Game
 {
@@ -16,53 +20,59 @@ public:
 		int width,
 		int height,
 		int flags);
+
 	void render();
 	void update();
 	void handleEvents();
 	void clean();
 	bool isRunning();
 	
+	void Compare();
+	void GiveDealerCard(int givenCard, std::vector <Card> &cards); 
+	void GivePlayerCard(int givenCard, std::vector <Card>& cards);
 	std::string getRandomFace(); 
-	
-	static double calculatePlayerPoints();
-	static double calculateDealerPoints();
 
 private:
-	void loadTextures();
-
-	void initPlayerCards();
-	void initDealerCards();
-	void initCardsValue();
-
-
-	// void setNewPoints(double playerPoints = 0.0, double dealerPoints = 0.0);
-
 	SDL_Window* window = NULL;
+
 	SDL_Renderer* renderer = NULL;
 	bool running;
-
 	int const backgroundWidht = 1280;
 	int const backgroundHeight = 720;
 
-	int cardPosX = 0;
-	int cardPosY = 0;
+	int cardPosX = backgroundWidht / 2 - 200; //layout
+	int cardPosY = 0; //layout
+	void loadTextures();
+	void initPlayerCards();
+	void initDealerCards();
+	void ChangeLayout(); //factory
 
 	enum GameState
 	{
 		ReadyToStartGame,
-		PlayerHaveTwoCards,
-		PlayerHaveThreeCards,
+		PlayersHaveTwoCards,
+		Playing,
 		GameResult
-	};
+	}; //gameStates
+
 	GameState state;
+	std::vector <Card> playerCards;
+	std::vector <Card> dealerCards;
 
-	Card playerCard1;
-	Card playerCard2;
-	Card playerCard3;
+	std::unique_ptr<Interface> layout;
+	Balance balance;
+	Player player;
+	int m_layoutId = 0;  //factory
 
-	Card dealerCard1;
-	Card dealerCard2;
+	double m_power; //card
+	void ResetGame();
+	//void StartingGame();
+	void GameOver();
+	void Win();
+	void Lose();
 
-	static double playerPoints;
-	static double dealerPoints;
+	bool isWiningGame = false;
+	bool isLosingGame = false;
+	bool IsGameOver = false;
+	bool IsStartingNewGame = true;
 };
