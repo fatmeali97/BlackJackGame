@@ -17,7 +17,7 @@ std::unique_ptr<Interface> Factory::CreateLayout(Layouts layoutId)
 	} break;
 	case Layouts::LayoutCircleCards:
 	{
-		return std::make_unique<LayoutVerticalView>();
+		return std::make_unique<LayoutCircleCardsView>();
 	} break;
 	default: break;
 	}

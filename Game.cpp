@@ -1,9 +1,6 @@
 ﻿//Game.cpp
 #include "Game.h"
 #include "TextureManager.h"
-//#include "LayoutHorizontalView.h"
-//#include "LayoutVerticalView.h"
-//#include "LayoutCircleCardsView.h"
 #include <iostream>
 #include <vector>
 #include "Factory.h"
@@ -34,8 +31,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				initPlayerCards();
 				initDealerCards();
 				player.InitText(renderer);
-				
-				//layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
+
 				ChangeLayout();
 			}
 			else
@@ -467,60 +463,30 @@ void Game::initDealerCards()
 
 void Game::ChangeLayout()
 {
-	m_layoutId++;
-	std::cout << static_cast<int>(Layouts::MaxLayoutCount) << std::endl;
-	layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
-	if (m_layoutId == 0)
-	{
-		layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
-		std::cout << m_layoutId << std::endl;
-		return;
-	}
-
-	else if (m_layoutId == 1)
-	{
-		layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
-		std::cout << m_layoutId << std::endl;
-		return;
-	}
-
-	else if (m_layoutId == 2)
-	{
-		layout = Factory::CreateLayout(Layouts::LayoutVertical);
-		std::cout << m_layoutId << std::endl;
-		return;
-	}
-
 	if (m_layoutId > 2)
 	{
 		m_layoutId = 0;
 	}
 
-	//for (m_layoutId = 0; m_layoutId < static_cast<int>(Layouts::MaxLayoutCount); ++m_layoutId)
-	//{
-	//	std::cout << m_layoutId << std::endl;
-	//	switch (m_layoutId)
-	//	{
-	//	case 0:
-	//	{
-	//		layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
-	//		//std::cout << "Layouts::LayoutHorizontal " << std::endl;
-	//	} break;
-	//	case 1:
-	//	{
-	//		layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
-	//		//std::cout << "Layouts::LayoutCircleCards" << std::endl;
-	//	} break;
-	//	case 2:
-	//	{
-	//		layout = Factory::CreateLayout(Layouts::LayoutVertical);
-	//		//std::cout << "Layouts::LayoutVertical" << std::endl;
-	//	} break;
-	//	default: break;
-	//	}
-	//}
+	if (m_layoutId == 0)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
+		std::cout << m_layoutId << std::endl;
+	}
 
-	std::cout << m_layoutId << std::endl;
+	else if (m_layoutId == 1)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutVertical);
+		std::cout << m_layoutId << std::endl;
+	}
+
+	else if (m_layoutId == 2)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
+		std::cout << m_layoutId << std::endl;
+	}
+
+	m_layoutId++;
 }
 
 void Game::IncreasedId(int increaseValue)

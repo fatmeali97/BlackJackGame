@@ -78,5 +78,4 @@ private:
 	bool IsGameOver = false;
 	bool IsStartingNewGame = true;
 
-	//Factory* factory;
 };
