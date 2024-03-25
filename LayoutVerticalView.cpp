@@ -4,12 +4,12 @@
 
 LayoutVerticalView::LayoutVerticalView()
 {
-	std::cout << "construcrtor LayoutVerticalView" << std::endl;
+	//std::cout << "construcrtor LayoutVerticalView" << std::endl;
 }
 
 LayoutVerticalView::~LayoutVerticalView()
 {
-	std::cout << "destructor LayoutVerticalView" << std::endl;
+	//std::cout << "destructor LayoutVerticalView" << std::endl;
 }
 
 LayoutVerticalView::LayoutVerticalView(int x, int y): Interface(x,y)

@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Interface.h"
 
+
 class Game
 {
 public:
@@ -60,13 +61,14 @@ private:
 	std::vector <Card> dealerCards;
 
 	std::unique_ptr<Interface> layout;
+
 	Balance balance;
 	Player player;
-	int m_layoutId = 0;  //factory
+	void IncreasedId(int increaseValue);
+	int m_layoutId = 0; 
 
 	double m_power; //card
 	void ResetGame();
-	//void StartingGame();
 	void GameOver();
 	void Win();
 	void Lose();
@@ -75,4 +77,6 @@ private:
 	bool isLosingGame = false;
 	bool IsGameOver = false;
 	bool IsStartingNewGame = true;
+
+	//Factory* factory;
 };

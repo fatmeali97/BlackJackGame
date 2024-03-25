@@ -5,12 +5,12 @@
 
 LayoutHorizontalView::LayoutHorizontalView()
 {
-	std::cout << "constructor LayoutHorizontalView" << std::endl;
+	//std::cout << "constructor LayoutHorizontalView" << std::endl;
 }
 
 LayoutHorizontalView::~LayoutHorizontalView()
 {
-	std::cout << "destructor LayoutHorizontalView" << std::endl;
+	//std::cout << "destructor LayoutHorizontalView" << std::endl;
 }
 
 LayoutHorizontalView::LayoutHorizontalView(int x, int y) : Interface(x,y)

@@ -11,8 +11,9 @@ namespace constant
 	const double playerXpos = 1280 - 250;
 	const double cardOffset = 60;
 	const double verticalAngle = 2;
-	const double horizontalAngleDealer = 90;
-	const double horizontalAnglePlayer = -90;
+	const double circleAngle = -2;
+	const double horizontalAngleDealer = 86;
+	const double horizontalAnglePlayer = -96;
 }
 
 class Interface

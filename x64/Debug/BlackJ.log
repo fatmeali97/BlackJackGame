@@ -1,14 +1,14 @@
 ﻿  Game.cpp
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(437,72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(437,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(452,72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(452,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(667,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(720,2): warning C4150: deletion of pointer to incomplete type 'SDL_Window'; no destructor called
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(443,72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(443,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(458,72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(458,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(705,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(758,2): warning C4150: deletion of pointer to incomplete type 'SDL_Window'; no destructor called
   C:\Users\fatos\OneDrive\Работен плот\SDL2-2.30.0\include\SDL_video.h(95,16):
   see declaration of 'SDL_Window'
   
-C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(721,2): warning C4150: deletion of pointer to incomplete type 'SDL_Renderer'; no destructor called
+C:\Users\fatos\OneDrive\Работен плот\c++\BlackJ\Game.cpp(759,2): warning C4150: deletion of pointer to incomplete type 'SDL_Renderer'; no destructor called
   C:\Users\fatos\OneDrive\Работен плот\SDL2-2.30.0\include\SDL_render.h(141,8):
   see declaration of 'SDL_Renderer'
   

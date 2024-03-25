@@ -1,10 +1,13 @@
 ﻿//Game.cpp
 #include "Game.h"
 #include "TextureManager.h"
-#include "LayoutHorizontalView.h"
-#include "LayoutVerticalView.h"
+//#include "LayoutHorizontalView.h"
+//#include "LayoutVerticalView.h"
+//#include "LayoutCircleCardsView.h"
 #include <iostream>
 #include <vector>
+#include "Factory.h"
+
 
 
 bool Game::init(const char* title, int xpos, int ypos, int width, int height, int flags)
@@ -31,9 +34,9 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				initPlayerCards();
 				initDealerCards();
 				player.InitText(renderer);
-
-			
-				layout = std::make_unique<LayoutHorizontalView>();
+				
+				//layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
+				ChangeLayout();
 			}
 			else
 			{
@@ -61,7 +64,6 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 	layout->DrawBackground(renderer);
-
 
 	if (state == PlayersHaveTwoCards || state == Playing)
 	{
@@ -188,6 +190,10 @@ void Game::loadTextures()
 
 	TextureManager::Instance()->loadTexture("./assets/linen-texture-green-tones.jpg",
 		"background1",
+		renderer);
+
+	TextureManager::Instance()->loadTexture("./assets/layout3.jpg",
+		"background3",
 		renderer);
 
 	TextureManager::Instance()->loadTexture("./assets/cardBackBlue.png",
@@ -462,24 +468,65 @@ void Game::initDealerCards()
 void Game::ChangeLayout()
 {
 	m_layoutId++;
+	std::cout << static_cast<int>(Layouts::MaxLayoutCount) << std::endl;
+	layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
+	if (m_layoutId == 0)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
+		std::cout << m_layoutId << std::endl;
+		return;
+	}
 
-	if (m_layoutId > 1)
+	else if (m_layoutId == 1)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
+		std::cout << m_layoutId << std::endl;
+		return;
+	}
+
+	else if (m_layoutId == 2)
+	{
+		layout = Factory::CreateLayout(Layouts::LayoutVertical);
+		std::cout << m_layoutId << std::endl;
+		return;
+	}
+
+	if (m_layoutId > 2)
 	{
 		m_layoutId = 0;
 	}
 
-	switch (m_layoutId)
-	{
-	case 0: 
-	{
-		layout = std::make_unique<LayoutHorizontalView>();
-	} break;
-	case 1: 
-	{
-		layout = std::make_unique<LayoutVerticalView>();
-	} break;
-	default: break;
-	}
+	//for (m_layoutId = 0; m_layoutId < static_cast<int>(Layouts::MaxLayoutCount); ++m_layoutId)
+	//{
+	//	std::cout << m_layoutId << std::endl;
+	//	switch (m_layoutId)
+	//	{
+	//	case 0:
+	//	{
+	//		layout = Factory::CreateLayout(Layouts::LayoutHorizontal);
+	//		//std::cout << "Layouts::LayoutHorizontal " << std::endl;
+	//	} break;
+	//	case 1:
+	//	{
+	//		layout = Factory::CreateLayout(Layouts::LayoutCircleCards);
+	//		//std::cout << "Layouts::LayoutCircleCards" << std::endl;
+	//	} break;
+	//	case 2:
+	//	{
+	//		layout = Factory::CreateLayout(Layouts::LayoutVertical);
+	//		//std::cout << "Layouts::LayoutVertical" << std::endl;
+	//	} break;
+	//	default: break;
+	//	}
+	//}
+
+	std::cout << m_layoutId << std::endl;
+}
+
+void Game::IncreasedId(int increaseValue)
+{
+	m_layoutId = m_layoutId + increaseValue;
+
 }
 
 void Game::ResetGame()
@@ -556,17 +603,11 @@ void Game::Compare()
 	//	}
 	//}
 
-	/*if (player.GetPlayerScore() >= 21 || player.GetDealerScore() >= 21)
-	{
-		return;
-	}*/
-
 	if (player.GetPlayerScore() >= 21 && player.GetPlayerScore() > player.GetDealerScore())
 	{
 		double newBalance = balance.GetBalance() - balance.GetBetValue();
 		balance.SetBalance(newBalance);
 		Lose();
-		//return;
 	}
 
 	else if (player.GetPlayerScore() < 21 && player.GetDealerScore() > 21)
@@ -574,7 +615,6 @@ void Game::Compare()
 		double newBalance = balance.GetBalance() - balance.GetBetValue();
 		balance.SetBalance(newBalance);
 		Win();
-		//return;
 	}
 
 	else if (player.GetPlayerScore() == 21 && player.GetPlayerScore() == player.GetDealerScore())
@@ -584,14 +624,12 @@ void Game::Compare()
 			double newBalance = balance.GetBalance() - balance.GetBetValue();
 			balance.SetBalance(newBalance);
 			Win();
-			//return;
 		}
 		else if (player.GetPlayerScore() > player.GetDealerScore())
 		{
 			double newBalance = balance.GetBalance() - balance.GetBetValue();
 			balance.SetBalance(newBalance);
 			Lose();
-			//return;
 		}
 	}
 
@@ -607,8 +645,8 @@ void Game::GiveDealerCard(int cardToBeGiven, std::vector <Card>& cards)
 		std::string cardValue = getRandomFace();
 		tempCard.SetFace(cardValue);
 		cards.push_back(tempCard);
-		std::cout << "Player cards are " << cardValue <<
-			" the value is: " << m_power << std::endl;
+		/*std::cout << "Player cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;*/
 		player.SetDealerScore(m_power);
 	}
 }
@@ -621,8 +659,8 @@ void Game::GivePlayerCard(int cardToBeGiven, std::vector <Card> &cards)
 		std::string cardValue = getRandomFace();
 		tempCard.SetFace(cardValue);
 		cards.push_back(tempCard);
-		std::cout << "Dealer cards are " << cardValue <<
-			" the value is: " << m_power << std::endl;
+		/*std::cout << "Dealer cards are " << cardValue <<
+			" the value is: " << m_power << std::endl;*/
 		player.SetPlayerScore(m_power);
 	}
 }

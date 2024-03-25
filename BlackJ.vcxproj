@@ -133,6 +133,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Balance.cpp" />
+    <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="LayoutCircleCardsView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -146,8 +148,10 @@
   <ItemGroup>
     <ClInclude Include="Balance.h" />
     <ClInclude Include="Card.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="LayoutCircleCardsView.h" />
     <ClInclude Include="LayoutHorizontalView.h" />
     <ClInclude Include="LayoutVerticalView.h" />
     <ClInclude Include="Player.h" />
